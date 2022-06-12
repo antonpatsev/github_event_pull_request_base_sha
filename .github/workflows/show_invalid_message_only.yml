@@ -22,7 +22,7 @@ jobs:
           set -o pipefail  # fails if pipes (|) fails
           # set -o xtrace  # debug
           LIST_MESSAGE_COMMITS=$(git log ${{ github.event.pull_request.base.sha }}..${{ github.event.pull_request.head.sha }} --pretty=format:%s)
-          for MESSAGE_COMMITS in "${LIST_MESSAGE_COMMITS}"
+          for MESSAGE_COMMITS in "${LIST_MESSAGE_COMMITS[@]}"
           do
             echo ${MESSAGE_COMMITS}
             if ! [[ ${MESSAGE_COMMITS} =~ ${REGEX} ]]; then
@@ -33,3 +33,4 @@ jobs:
           done
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
