@@ -29,9 +29,6 @@ jobs:
               echo "Invalid message commit:"
               echo "${MESSAGE_COMMITS}"
               exit 1
-            else
-              echo "Valid message commit:"
-              echo "${MESSAGE_COMMITS}"
             fi
           done
         env:
