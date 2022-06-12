@@ -1,1 +1,1 @@
-feat(gsuite): qqqq (dddd-1865)
+feat(gsuite): qqqq (DEVOPS-1865)
