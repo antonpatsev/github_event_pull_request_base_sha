@@ -1,0 +1,21 @@
+---
+name: git_log
+
+on:
+  pull_request:
+    branches: [master, main]
+
+jobs:
+  git_log:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Check message commits
+        run: |
+          git log ${{ github.event.pull_request.base.sha }}..${{ github.event.pull_request.head.sha }} --pretty=format:%s
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+

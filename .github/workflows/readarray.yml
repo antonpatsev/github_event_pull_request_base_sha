@@ -1,0 +1,36 @@
+---
+name: readarray
+
+on:
+  pull_request:
+    branches: [master, main]
+
+jobs:
+  readarray:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Check message commits
+        run: |
+          #!/bin/bash
+          REGEX="^(feat|fix)\((alerts|backup|cicd|dns|git|github|gcloud|gke|gsuite|iam|inventory|spanner-autoscaler|terraform|tf)\):\s.*\s\(DEVOPS-[0-9]+\)$"
+          set -o errexit   # exit on error
+          set -o nounset   # fail if var undefined
+          set -o noclobber # don't overwrite exists files via >
+          set -o pipefail  # fails if pipes (|) fails
+          set -o xtrace  # debug
+          readarray -t LIST_MESSAGE_COMMITS < <(git log ${{ github.event.pull_request.base.sha }}..${{ github.event.pull_request.head.sha }} --pretty=format:%s)
+          for MESSAGE_COMMITS in "${LIST_MESSAGE_COMMITS[@]}"
+          do
+            if ! [[ ${MESSAGE_COMMITS} =~ ${REGEX} ]]; then
+              echo "Invalid message commit:"
+              echo "${MESSAGE_COMMITS}"
+              exit 1
+            fi
+          done
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
