@@ -2,6 +2,7 @@
 name: github_event_pull_request_base_sha
 
 on:
+  push:
   pull_request:
     branches: [master, main]
 
