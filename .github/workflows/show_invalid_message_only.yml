@@ -15,6 +15,7 @@ jobs:
           fetch-depth: 0
       - name: Check message commits
         run: |
+          #!/bin/bash
           REGEX="^(feat|fix)\((alerts|backup|cicd|dns|git|github|gcloud|gke|gsuite|iam|inventory|spanner-autoscaler|terraform|tf)\):\s.*\s\(DEVOPS-[0-9]+\)$"
           set -o errexit   # exit on error
           set -o nounset   # fail if var undefined
@@ -22,7 +23,7 @@ jobs:
           set -o pipefail  # fails if pipes (|) fails
           # set -o xtrace  # debug
           LIST_MESSAGE_COMMITS=$(git log ${{ github.event.pull_request.base.sha }}..${{ github.event.pull_request.head.sha }} --pretty=format:%s)
-          for MESSAGE_COMMITS in ${LIST_MESSAGE_COMMITS[@]}
+          for MESSAGE_COMMITS in "${LIST_MESSAGE_COMMITS[@]}"
           do
             if ! [[ ${MESSAGE_COMMITS} =~ ${REGEX} ]]; then
               echo "Invalid message commit:"
