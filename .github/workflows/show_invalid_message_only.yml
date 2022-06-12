@@ -1,12 +1,12 @@
 ---
-name: github_event_pull_request_base_sha
+name: show_invalid_message_only
 
 on:
   pull_request:
     branches: [master, main]
 
 jobs:
-  github_event_pull_request_base_sha:
+  show_invalid_message_only:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
