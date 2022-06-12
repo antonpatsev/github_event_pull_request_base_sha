@@ -24,7 +24,6 @@ jobs:
           LIST_MESSAGE_COMMITS=$(git log ${{ github.event.pull_request.base.sha }}..${{ github.event.pull_request.head.sha }} --pretty=format:%s)
           for MESSAGE_COMMITS in "${LIST_MESSAGE_COMMITS}"
           do
-            echo ${MESSAGE_COMMITS}
             if [[ ${MESSAGE_COMMITS} =~ ${REGEX} ]]; then
               echo "Valid message commit:"
               echo "${MESSAGE_COMMITS}"
