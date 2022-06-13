@@ -16,7 +16,8 @@ jobs:
       - name: Check message commits
         run: |
           #!/bin/bash
-          REGEX="^(feat|fix|refactor)\((alerts|backup|cicd|dns|github|gke|gsuite|iam|inventory|pingdom|spanner-autoscaler|tf)\):\s.*\s\(DEVOPS-[0-9]+\)$"
+          # shellcheck source=/dev/null
+          source ".env.commit_message_regexp"
           set -o errexit   # exit on error
           set -o nounset   # fail if var undefined
           set -o noclobber # don't overwrite exists files via >
@@ -25,9 +26,9 @@ jobs:
           readarray -t LIST_MESSAGE_COMMITS < <(git log ${{ github.event.pull_request.base.sha }}..${{ github.event.pull_request.head.sha }} --pretty=format:%s)
           for MESSAGE_COMMITS in "${LIST_MESSAGE_COMMITS[@]}"
           do
-            if ! [[ ${MESSAGE_COMMITS} =~ ${REGEX} ]]; then
+            if ! [[ ${MESSAGE_COMMITS} =~ ${COMMIT_MESSAGE_REGEXP} ]]; then
               echo "Invalid message commit:"
-              git log ${{ github.event.pull_request.base.sha }}..${{ github.event.pull_request.head.sha }} --pretty=format:%s --grep="${REGEX}" --extended-regexp --invert-grep
+              git log ${{ github.event.pull_request.base.sha }}..${{ github.event.pull_request.head.sha }} --pretty=format:%s --grep="${COMMIT_MESSAGE_REGEXP}" --extended-regexp --invert-grep
               exit 1
             fi
           done
