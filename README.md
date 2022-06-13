@@ -1,1 +1,1 @@
-feat(gsuite): pppp (DEVOPS-6346)
+feat(gsuite): pppp (DEVOPS6346)
