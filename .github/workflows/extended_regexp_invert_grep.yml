@@ -16,13 +16,21 @@ jobs:
       - name: Check message commits
         run: |
           #!/bin/bash
-          REGEX="^(feat|fix)\((alerts|backup|cicd|dns|git|github|gcloud|gke|gsuite|iam|inventory|spanner-autoscaler|terraform|tf)\):\s.*\s\(DEVOPS-[0-9]+\)$"
+          REGEX="^(feat|fix|refactor)\((alerts|backup|cicd|dns|github|gke|gsuite|iam|inventory|pingdom|spanner-autoscaler|tf)\):\s.*\s\(DEVOPS-[0-9]+\)$"
           set -o errexit   # exit on error
           set -o nounset   # fail if var undefined
           set -o noclobber # don't overwrite exists files via >
           set -o pipefail  # fails if pipes (|) fails
           # set -o xtrace  # debug
-          git log ${{ github.event.pull_request.base.sha }}..${{ github.event.pull_request.head.sha }} --pretty=format:%s --grep="${REGEX}" --extended-regexp --invert-grep
+          readarray -t LIST_MESSAGE_COMMITS < <(git log ${{ github.event.pull_request.base.sha }}..${{ github.event.pull_request.head.sha }} --pretty=format:%s)
+          for MESSAGE_COMMITS in "${LIST_MESSAGE_COMMITS[@]}"
+          do
+            if ! [[ ${MESSAGE_COMMITS} =~ ${REGEX} ]]; then
+              echo "Invalid message commit:"
+              git log ${{ github.event.pull_request.base.sha }}..${{ github.event.pull_request.head.sha }} --pretty=format:%s --grep="${REGEX}" --extended-regexp --invert-grep
+              exit 1
+            fi
+          done
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
