@@ -15,7 +15,6 @@ jobs:
           fetch-depth: 0
       - name: Check message commits
         run: |
-          #!/bin/bash
           # shellcheck source=/dev/null
           source ".env.commit_message_regexp"
           set -o errexit   # exit on error
@@ -29,3 +28,4 @@ jobs:
             echo "${COMMIT_MESSAGE_ERRORS}"
             exit 1
           fi
+        shell: bash {0}
